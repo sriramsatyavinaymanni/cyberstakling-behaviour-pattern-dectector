@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Cyberstalking Behaviour Pattern Detector — a beginner-friendly, local web app for reviewing synthetic communication log patterns in a transparent and safety-focused way."
+    />
+    <title>Cyberstalking Behaviour Pattern Detector</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <nav class="topbar container">
+          <div class="brand">
+            <span class="brand-mark">◈</span>
+            <span>Cyberstalking Behaviour Pattern Detector</span>
+          </div>
+          <div class="nav-links">
+            <a href="#overview">Overview</a>
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How it works</a>
+            <a href="#run">Run locally</a>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero container" id="overview">
+          <div class="hero-copy">
+            <p class="eyebrow">Safety-first behavioural review tool</p>
+            <h1>Transparent review of communication patterns in synthetic logs.</h1>
+            <p class="lead">
+              This beginner-friendly project explores observable signals such as repeated contact,
+              increased frequency, unanswered attempts, and cross-platform activity. It is designed
+              for educational use and does not identify a person or assign criminal intent.
+            </p>
+
+            <div class="cta-row">
+              <a class="button primary" href="https://github.com/sriramsatyavinaymanni/cyberstakling-behaviour-pattern-dectector" target="_blank" rel="noreferrer">View GitHub repo</a>
+              <a class="button secondary" href="#run">Run locally</a>
+            </div>
+
+            <ul class="hero-points">
+              <li>Local Flask dashboard</li>
+              <li>CSV validation and safety checks</li>
+              <li>Explainable risk indicators</li>
+            </ul>
+          </div>
+
+          <div class="hero-card">
+            <div class="card-header">
+              <span class="dot green"></span>
+              <span>Signal Review</span>
+            </div>
+            <div class="stat-grid">
+              <div>
+                <strong>30</strong>
+                <span>Messages</span>
+              </div>
+              <div>
+                <strong>11</strong>
+                <span>Accounts</span>
+              </div>
+              <div>
+                <strong>6</strong>
+                <span>Profiles</span>
+              </div>
+              <div>
+                <strong>1</strong>
+                <span>High-risk pattern</span>
+              </div>
+            </div>
+            <div class="mini-panel">
+              <p>Safety boundary</p>
+              <small>
+                This project surfaces observable behavioural indicators only. It does not determine
+                identity, diagnosis, or guilt.
+              </small>
+            </div>
+          </div>
+        </section>
+
+        <section class="feature-band">
+          <div class="container feature-strip">
+            <div>
+              <strong>Educational</strong>
+              <span>Built for learning and demonstration</span>
+            </div>
+            <div>
+              <strong>Transparent</strong>
+              <span>Visible indicators and rule explanations</span>
+            </div>
+            <div>
+              <strong>Privacy-aware</strong>
+              <span>Uses synthetic, authorized, or minimized data</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="container" id="features">
+          <div class="section-head">
+            <p class="eyebrow">What the project covers</p>
+            <h2>Built to review patterns without making accusations.</h2>
+          </div>
+
+          <div class="card-grid">
+            <article class="info-card">
+              <h3>Repeated contact</h3>
+              <p>
+                Tracks repeated interactions between accounts and highlights when communication volume
+                becomes unusually persistent.
+              </p>
+            </article>
+
+            <article class="info-card">
+              <h3>Frequency changes</h3>
+              <p>
+                Compares message counts across time to detect escalation or increased engagement over a
+                review period.
+              </p>
+            </article>
+
+            <article class="info-card">
+              <h3>Unanswered attempts</h3>
+              <p>
+                Identifies records marked as unanswered or not replied and groups them into a visible
+                indicator summary.
+              </p>
+            </article>
+
+            <article class="info-card">
+              <h3>Platform diversity</h3>
+              <p>
+                Reviews whether similar activity is being spread across different communication channels,
+                which may signal broader persistence.
+              </p>
+            </article>
+
+            <article class="info-card">
+              <h3>Human review</h3>
+              <p>
+                The application presents findings as behavioural indicators, and leaves final interpretation
+                to a human user.
+              </p>
+            </article>
+
+            <article class="info-card">
+              <h3>CSV-driven workflow</h3>
+              <p>
+                Upload a CSV file, validate it locally, and replace the active dataset without storing
+                private messages beyond the local environment.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="container" id="how-it-works">
+          <div class="section-head">
+            <p class="eyebrow">How it works</p>
+            <h2>Simple rules, transparent analysis, and a local dashboard.</h2>
+          </div>
+
+          <div class="steps">
+            <div class="step">
+              <span>01</span>
+              <h3>Load sample or upload CSV</h3>
+              <p>Use the included demo data or add your own validated communication logs.</p>
+            </div>
+            <div class="step">
+              <span>02</span>
+              <h3>Validate fields</h3>
+              <p>Columns such as timestamp, sender, receiver, platform, and response status are checked.</p>
+            </div>
+            <div class="step">
+              <span>03</span>
+              <h3>Review indicators</h3>
+              <p>The dashboard explains which behavioural patterns are visible in the data.</p>
+            </div>
+            <div class="step">
+              <span>04</span>
+              <h3>Human interpretation</h3>
+              <p>Results are framed as observable indicators and not as a definitive conclusion.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="container stack-panel" id="run">
+          <div class="section-head narrow">
+            <p class="eyebrow">Run it locally</p>
+            <h2>Start the project on your machine.</h2>
+          </div>
+
+          <div class="code-box">
+            <pre><code>py -3 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python app.py</code></pre>
+          </div>
+
+          <p class="note">
+            Open <strong>http://127.0.0.1:5000</strong> in your browser to view the dashboard. The app is
+            intended for local demonstration and should not be exposed publicly.
+          </p>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-inner">
+          <p>Cyberstalking Behaviour Pattern Detector</p>
+          <p class="muted">Educational, transparent, and safety-focused.</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
