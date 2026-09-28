@@ -24,6 +24,7 @@ MAX_UPLOAD_BYTES = 5 * 1024 * 1024
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY", "local-demo-key-change-before-sharing")
 app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_BYTES
+PORT = int(os.environ.get("PORT", "5000"))
 
 
 @contextmanager
@@ -211,4 +212,4 @@ def upload_too_large(_error):
 initialize_database()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=PORT, debug=False)
