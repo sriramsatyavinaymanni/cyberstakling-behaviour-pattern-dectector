@@ -1,0 +1,65 @@
+{% extends "index.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block breadcrumb %}DASHBOARD{% endblock %}
+{% block head %}<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><p class="eyebrow">COMMUNICATION PATTERN MONITOR <span class="heading-index">01 / OVERVIEW</span></p><h1>Pattern review</h1><p class="heading-copy">A structured view of contact frequency and interaction signals in your log sample.</p></div>
+  <div class="heading-actions">
+    <form class="upload-form" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+      <label class="button button-secondary upload-button" for="csv-file"><span aria-hidden="true">↑</span> Upload CSV</label>
+      <input id="csv-file" name="file" type="file" accept=".csv,text/csv" required>
+      <button class="button button-primary" type="submit">Analyze file <span aria-hidden="true">↗</span></button>
+    </form>
+    <a class="button button-report" href="{{ url_for('report') }}"><span aria-hidden="true">▤</span> Generate report</a>
+  </div>
+</section>
+
+<div class="safety-banner"><span class="safety-icon" aria-hidden="true">i</span><p><strong>Behavioural indicators only.</strong> This tool surfaces patterns in the provided records; it does not identify a person, infer intent, or provide a legal or psychological diagnosis.</p><span class="banner-demo">SAMPLE DATA</span></div>
+
+<section class="stat-grid" aria-label="Communication statistics">
+  <article class="stat-card stat-primary"><div class="stat-top"><span>Total messages</span><span class="stat-symbol">↗</span></div><strong>{{ "{:,}".format(analysis.total_messages) }}</strong><small>Across selected analysis period</small><div class="stat-accent accent-coral"></div></article>
+  <article class="stat-card"><div class="stat-top"><span>Unique accounts</span><span class="stat-symbol">◎</span></div><strong>{{ analysis.unique_accounts }}</strong><small>Senders and receivers combined</small><div class="stat-accent accent-lime"></div></article>
+  <article class="stat-card"><div class="stat-top"><span>Average / day</span><span class="stat-symbol">⌁</span></div><strong>{{ analysis.average_per_day }}</strong><small>Messages per calendar day</small><div class="stat-accent accent-blue"></div></article>
+  <article class="stat-card"><div class="stat-top"><span>Repeated contact</span><span class="stat-symbol">⟳</span></div><strong>{{ analysis.repeated_contact_count }}</strong><small>Records in pairs with 3+ messages</small><div class="stat-accent accent-yellow"></div></article>
+</section>
+
+<section class="overview-grid">
+  <article class="panel summary-panel">
+    <div class="panel-head"><div><p class="eyebrow">SYSTEM READOUT</p><h2>Overall pattern summary</h2></div><span class="status-pill"><i></i> RULE-BASED</span></div>
+    <p class="summary-text">{{ analysis.summary }}</p>
+    <div class="summary-meta"><div><span>Analysis period</span><strong>{{ analysis.period_start or "No records" }} <span class="meta-arrow">→</span> {{ analysis.period_end or "—" }}</strong></div><div><span>Profiles assessed</span><strong>{{ analysis.sender_summaries|length }} sender profiles</strong></div></div>
+    <a class="text-link" href="{{ url_for('analysis_page') }}">Review indicators <span>→</span></a>
+  </article>
+  <article class="panel distribution-panel">
+    <div class="panel-head"><div><p class="eyebrow">INDICATOR COUNTS</p><h2>Risk-indicator distribution</h2></div><span class="mini-icon">◌</span></div>
+    <div class="chart-holder chart-donut"><canvas id="riskChart" aria-label="Risk indicator distribution chart"></canvas></div>
+    <div class="legend-list" id="riskLegend"></div>
+  </article>
+</section>
+
+<section class="chart-grid">
+  <article class="panel chart-panel chart-wide"><div class="panel-head"><div><p class="eyebrow">VOLUME / DAY</p><h2>Messages over time</h2></div><span class="chart-note">DAILY TOTAL</span></div><div class="chart-holder chart-line"><canvas id="messagesChart" aria-label="Messages per day chart"></canvas></div></article>
+  <article class="panel chart-panel chart-wide"><div class="panel-head"><div><p class="eyebrow">CONTACT FREQUENCY / ACCOUNT</p><h2>Contact frequency over time</h2></div><span class="chart-note">DAILY BY SENDER</span></div><div class="chart-holder chart-line"><canvas id="contactTrendChart" aria-label="Contact frequency over time by sender chart"></canvas></div></article>
+  <article class="panel chart-panel"><div class="panel-head"><div><p class="eyebrow">ACTIVITY / ACCOUNT</p><h2>Messages by sender</h2></div><span class="chart-note">TOP SENDERS</span></div><div class="chart-holder chart-bars"><canvas id="senderChart" aria-label="Messages by sender chart"></canvas></div></article>
+  <article class="panel chart-panel"><div class="panel-head"><div><p class="eyebrow">CHANNEL MIX</p><h2>Messages by platform</h2></div><span class="chart-note">ALL CHANNELS</span></div><div class="chart-holder chart-bars"><canvas id="platformChart" aria-label="Messages by platform chart"></canvas></div></article>
+</section>
+
+<section class="panel log-panel">
+  <div class="panel-head log-head"><div><p class="eyebrow">RECORD EXPLORER</p><h2>Communication log</h2><p class="panel-subtitle">Filter and inspect the currently loaded records.</p></div><span class="record-count" id="recordCount">{{ analysis.logs|length }} RECORDS</span></div>
+  <div class="filter-grid" aria-label="Log filters">
+    <label class="search-field"><span>⌕</span><input id="searchInput" type="search" placeholder="Search accounts or message type" aria-label="Search communication logs"></label>
+    <select id="senderFilter" aria-label="Filter by sender"><option value="">All senders</option>{% for item in analysis.sender_summaries %}<option value="{{ item.sender_id }}">{{ item.sender_id }}</option>{% endfor %}</select>
+    <select id="receiverFilter" aria-label="Filter by receiver"><option value="">All receivers</option>{% for receiver in analysis.logs|map(attribute='receiver_id')|unique|sort %}<option value="{{ receiver }}">{{ receiver }}</option>{% endfor %}</select>
+    <input id="dateFilter" type="date" aria-label="Filter by date">
+    <select id="platformFilter" aria-label="Filter by platform"><option value="">All platforms</option>{% for platform in analysis.logs|map(attribute='platform')|unique|sort %}<option value="{{ platform }}">{{ platform }}</option>{% endfor %}</select>
+    <select id="riskFilter" aria-label="Filter by risk indicator"><option value="">All indicators</option>{% for item in analysis.sender_summaries|map(attribute='risk_level')|unique|sort %}<option value="{{ item }}">{{ item }}</option>{% endfor %}</select>
+    <button class="clear-filters" id="clearFilters" type="button">Clear filters</button>
+  </div>
+  <div class="table-wrap"><table class="log-table"><thead><tr><th>Timestamp</th><th>Sender</th><th>Receiver</th><th>Platform</th><th>Type</th><th>Response</th><th>Pattern indicator</th></tr></thead><tbody id="logTableBody">
+    {% for row in analysis.logs %}<tr data-timestamp="{{ row.timestamp }}" data-sender="{{ row.sender_id }}" data-receiver="{{ row.receiver_id }}" data-platform="{{ row.platform }}" data-type="{{ row.message_type }}" data-response="{{ row.response_status }}" data-risk="{{ row.risk_level }}"><td class="timestamp-cell">{{ row.timestamp }}</td><td class="account-cell">{{ row.sender_id }}</td><td>{{ row.receiver_id }}</td><td><span class="platform-label">{{ row.platform }}</span></td><td>{{ row.message_type }}</td><td><span class="response-label {% if row.after_non_response %}muted{% endif %}">{{ row.response_status }}</span></td><td><span class="risk-badge {% if 'High-risk' in row.risk_level %}risk-high{% elif 'Elevated' in row.risk_level %}risk-elevated{% elif 'Pattern' in row.risk_level %}risk-pattern{% else %}risk-low{% endif %}">{{ row.risk_level }}</span></td></tr>{% else %}<tr><td colspan="7" class="empty-state">No records yet. Upload a valid CSV to start an analysis.</td></tr>{% endfor %}
+  </tbody></table><div class="no-results" id="noResults" hidden>No records match these filters.</div></div>
+  <div class="table-foot"><span>Repeated pair rule: 3 or more messages from one sender to one receiver within this dataset.</span><span id="visibleCount">Showing {{ analysis.logs|length }} records</span></div>
+</section>
+<script>window.DASHBOARD_DATA = {{ analysis|tojson }};</script>
+{% endblock %}

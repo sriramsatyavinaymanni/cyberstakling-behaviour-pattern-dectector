@@ -1,0 +1,20 @@
+{% extends "index.html" %}
+{% block title %}Summary report{% endblock %}
+{% block breadcrumb %}REPORT{% endblock %}
+{% block head %}<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>{% endblock %}
+{% block content %}
+<section class="page-heading compact-heading report-heading"><div><p class="eyebrow">GENERATED SUMMARY <span class="heading-index">03 / REPORT</span></p><h1>Communication report</h1><p class="heading-copy">A concise snapshot of the currently loaded dataset.</p></div><div class="report-actions"><button class="button button-secondary" type="button" onclick="window.print()"><span aria-hidden="true">▧</span> Print report</button><a class="button button-primary" href="{{ url_for('download_report') }}"><span aria-hidden="true">↓</span> Download .txt</a></div></section>
+<div class="safety-banner report-safety"><span class="safety-icon" aria-hidden="true">i</span><p><strong>Interpretation notice.</strong> This is an automated summary of observable data patterns, not a legal or psychological diagnosis and not proof of wrongdoing.</p></div>
+<article class="panel report-document">
+  <div class="report-doc-head"><div class="report-stamp">SIGNAL / REVIEW <span>LOCAL ANALYSIS</span></div><div class="report-doc-type">PATTERN SUMMARY<br>CONFIDENTIAL TO THIS DEVICE</div></div>
+  <div class="report-section"><p class="eyebrow">01 / ANALYSIS PERIOD</p><h2>{{ analysis.period_start or "No records" }} <span>—</span> {{ analysis.period_end or "No records" }}</h2><p>{{ analysis.period_days }} calendar day(s) · {{ analysis.total_messages }} communication records</p></div>
+  <div class="report-stat-grid"><div><span>Total messages</span><strong>{{ analysis.total_messages }}</strong></div><div><span>Unique accounts</span><strong>{{ analysis.unique_accounts }}</strong></div><div><span>Average / day</span><strong>{{ analysis.average_per_day }}</strong></div><div><span>Repeated-contact records</span><strong>{{ analysis.repeated_contact_count }}</strong></div></div>
+  <div class="report-section"><p class="eyebrow">02 / OVERALL PATTERN SUMMARY</p><p class="report-summary">{{ analysis.summary }}</p></div>
+  <div class="report-section"><p class="eyebrow">03 / INDICATORS</p>{% if analysis.indicators %}<div class="report-indicators">{% for indicator in analysis.indicators %}<div><span>{{ indicator.name }}</span><strong>{{ indicator.count }} profile(s)</strong></div>{% endfor %}</div>{% else %}<p>No rule-based indicators were counted in this dataset.</p>{% endif %}</div>
+  <div class="report-section"><p class="eyebrow">04 / CHARTS</p><div class="report-chart-grid"><div class="report-chart"><h3>Messages per day</h3><div class="chart-holder"><canvas id="messagesChart" aria-label="Messages per day report chart"></canvas></div></div><div class="report-chart"><h3>Risk-indicator distribution</h3><div class="chart-holder"><canvas id="riskChart" aria-label="Risk distribution report chart"></canvas></div></div></div></div>
+  <div class="report-section"><p class="eyebrow">05 / PROFILE OBSERVATIONS</p><div class="report-profile-list">{% for item in analysis.sender_summaries %}<div><strong>{{ item.sender_id }}</strong><span>{{ item.message_count }} messages · {{ item.risk_level }}</span><small>{{ item.indicators|join(" · ") }}</small></div>{% else %}<p>No profiles are available.</p>{% endfor %}</div></div>
+  <div class="report-section report-ml"><p class="eyebrow">06 / MACHINE-LEARNING SIGNAL</p><p>{{ analysis.ml_note }}</p></div>
+  <div class="report-footer-note">Important observation: repeated-contact counts use the supplied dataset only. Missing, inaccurate, or incomplete records can change the indicators. Consider context, preserve records appropriately, and use relevant support channels for real-world safety concerns.</div>
+</article>
+<script>window.DASHBOARD_DATA = {{ analysis|tojson }};</script>
+{% endblock %}
